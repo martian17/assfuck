@@ -11,12 +11,24 @@ During the execution, a programmer gets a single stack to work on, and basically
 
 ## Operators
 * shove: push value to stack
-* grab: discard the top of the stack
+* expel: discard the top of the stack
 
 ## Functions
 * harder: duplicate the number of depth specified at the top of the stack
 * stuck?: if the deeper value is greater than the shallow value return true
 * pump: increment the value at stack head
+* relieve: decrement the value at stack head
 * moan: output the top of the stack
+* chain: given a number, take that number from the stack and turn it into a list.
+* nudge: add second top to top and update the top
+* shave: subtract second from top and update the top
+* booba: swap the top two on the stack
+* reverse: reverse the amount specified in the stack top
+* squirt: 
+* stroke: while loop. stack: inst1 inst2. After executing inst1, if head value is truthy then exec inst2. else continue
 * yell: reserved
-* stroke: while loop. stack: inst1 inst2. after inst1, if head is truthy exec inst2. else continue
+* suck: reserved
+
+## Comments and spaces
+* `//` initiates one line comment
+* `(){}` brackets are considered spaces, so they can serve as syntactic sugars. They are not necessary.

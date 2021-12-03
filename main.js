@@ -1,6 +1,5 @@
 
 let prog = `
-//calculating fibonacci
 //shove: push value to stack
 //harder: duplicate the number of depth specified at the top of the stack
 //stuck?: if deep value is greater than the shallow value return true
@@ -13,6 +12,32 @@ shove 10 shove 0
         ((shove stuck?) shove 1 chain)
         ((shove moan) (shove pump) shove 2 chain) stroke
 shove "mhm count my ass" moan
+`;
+
+let prog2 = `
+shove "Fibonacci my ass" moan expel
+shove 0 shove 1 shove 10 shove 0
+    ((shove stuck?) shove 1 chain)
+    (
+        (shove shove 4) (shove reverse)
+        (shove nudge) (shove booba) (shove moan)
+        (shove shove 4) (shove reverse)
+        (shove pump) // increment the counter
+        shove 8 chain
+    )stroke
+`;
+
+let prog3 = `
+shove "Fibonacci my ass" moan expel
+shove 0 shove 1 shove 10 shove 0
+    ((shove stuck?) shove 1 chain)
+    (
+        (shove shove 4) (shove reverse)
+        (shove nudge) (shove booba) (shove moan)
+        (shove shove 4) (shove reverse)
+        (shove pump) // increment the counter
+        shove 8 chain
+    )stroke
 `;
 
 const tokenize = (function(){
@@ -152,6 +177,9 @@ const operators = {
 };
 
 const funcs = {
+    "expel":function(stack){
+        stack.pop();
+    },
     "stuck?":function(stack){
         const a = stack.pop();
         const b = stack.pop();
@@ -165,12 +193,31 @@ const funcs = {
         });
     },
     "chain":function(stack){
+        const lentoken = stack.pop();
+        const len = lentoken.value;
+        const lst = [];
+        for(let i = 0; i < len; i++){
+            lst.push(stack.pop());
+        }
+        lst.reverse();
+        stack.push({
+            type:"val",
+            value:lst,
+            i:lentoken.i
+        });
+    },
+    "harder":function(stack){
         const len = stack.pop().value;
         const lst = [];
         for(let i = 0; i < len; i++){
             lst.push(stack.pop());
         }
-        stack.push(lst);
+        for(let i = 0; i < len; i++){
+            lst.push(stack[len-i-1]);
+        }
+        for(let i = 0; i < len; i++){
+            lst.push(stack[len-i-1]);
+        }
     },
     "moan":function(stack){
         const a = stack.pop();
@@ -187,9 +234,39 @@ const funcs = {
         a.value--;
         stack.push(a);
     },
+    "nudge":function(stack){
+        const a = stack.pop();
+        const b = stack.pop();
+        a.value += b.value;
+        stack.push(b);
+        stack.push(a);
+    },
+    "shave":function(stack){
+        const a = stack.pop();
+        const b = stack.pop();
+        a.value += b.value;
+        stack.push(b);
+        stack.push(a);
+    },
+    "booba":function(stack){
+        const a = stack.pop();
+        const b = stack.pop();
+        stack.push(a);
+        stack.push(b);
+    },
+    "reverse":function(stack){
+        const len = stack.pop().value;
+        let lst = [];
+        for(let i = 0; i < len; i++){
+            lst.push(stack.pop());
+        }
+        for(let i = 0; i < len; i++){
+            stack.push(lst[i]);
+        }
+    },
     "stroke":function(stack,ctx){
-        const inst = stack.pop();
-        const cond = stack.pop();
+        const inst = stack.pop().value;
+        const cond = stack.pop().value;
         execAss(cond,stack,ctx);
         while(stack.pop().value){
             execAss(inst,stack,ctx);
@@ -218,23 +295,32 @@ const execAss = function(cmds,stack,ctx){
 
 const exec = function(str){
     const tokens = tokenize(str);
-    console.log("tokens: ",tokens);
+    console.log("assembled program:");
+    console.log(tokens.map(a=>a.value).join(" "));
+    console.log("");
+    //console.log("tokens: ",tokens);
     const cmds = [];
     for(let i = 0; i < tokens.length; i++){
-        let token = tokens[i];
-        if(token.type === "id" && token.value in operators){
-            if(i >= tokens.length-1)
-                throwError(`Error: Operator without right hand side at ${getAtString(str,token)}`);
-            cmds.push({
+        const opchain = [];
+        while(tokens[i].type === "id" && tokens[i].value in operators){
+            opchain.push(tokens[i]);
+            i++;
+        }
+        if(i >= tokens.length){
+            console.log(cmds);
+            throwError(`Error: Operator without right hand side at ${getAtString(str,cmds.pop())}`);
+        }
+        let cmd = tokens[i];
+        while(opchain.length !== 0){
+            let token = opchain.pop();
+            cmd = {
                 type:"op",
                 name:token.value,
-                value:tokens[i+1],
+                value:cmd,
                 i:token.i
-            });
-            i++;
-        }else{
-            cmds.push(tokens[i]);
+            };
         }
+        cmds.push(cmd);
     }
     //console.log(cmds);
     const stack = [];
@@ -242,5 +328,5 @@ const exec = function(str){
     execAss(cmds,stack,ctx);
 }
 
-exec(prog);
+exec(prog2);
 //console.log(tokenize(prog));
