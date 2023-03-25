@@ -16,7 +16,7 @@ shove "mhm count my ass" moan
 
 let prog2 = `
 shove "Fibonacci my ass" moan expel
-shove 0 shove 1 shove 10 shove 0
+shove 0 shove 1 shove 100 shove 0
     ((shove stuck?) shove 1 chain)
     (
         (shove shove 4) (shove reverse)
