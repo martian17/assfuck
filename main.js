@@ -27,17 +27,19 @@ shove 0 shove 1 shove 100 shove 0
     )stroke
 `;
 
+
+// experimental feature: scoping
+// not used
 let prog3 = `
 shove "Fibonacci my ass" moan expel
 shove 0 shove 1 shove 10 shove 0
-    ((shove stuck?) shove 1 chain)
-    (
-        (shove shove 4) (shove reverse)
-        (shove nudge) (shove booba) (shove moan)
-        (shove shove 4) (shove reverse)
-        (shove pump) // increment the counter
-        shove 8 chain
-    )stroke
+    {stuck?}
+    {
+        shove 4 reverse
+        nudge booba moan
+        shove 4 reverse
+        pump // increment the counter
+    }stroke
 `;
 
 const tokenize = (function(){
