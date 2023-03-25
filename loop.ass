@@ -1,0 +1,13 @@
+//shove: push value to stack
+//harder: duplicate the number of depth specified at the top of the stack
+//stuck?: if deep value is greater than the shallow value return true
+//pump: increment the value at stack head
+//moan: output the top of the stack
+//yell: reserved
+//stroke: while loop. stack: inst1 inst2. after inst1, if head is truthy exec inst2. else continue
+
+shove 10 shove 0 
+        ((shove stuck?) shove 1 chain)
+        ((shove moan) (shove pump) shove 2 chain) stroke
+shove "mhm count my ass" moan
+

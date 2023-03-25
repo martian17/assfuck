@@ -1,0 +1,15 @@
+//: Fibonacci program
+//: Inside of the scope needs to be prefixed by "shove" since all the functions and operators will have to be pushed to the stack as well
+//: At the end of the scope the chain function will turn those pushed functions into a list that can be operated on with stroke
+
+shove "Fibonacci my ass" moan expel
+shove 0 shove 1 shove 100 shove 0
+    ((shove stuck?) shove 1 chain)
+    (
+        (shove shove 4) (shove reverse)
+        (shove nudge) (shove booba) (shove moan)
+        (shove shove 4) (shove reverse)
+        (shove pump) // increment the counter
+        shove 8 chain
+    )stroke
+

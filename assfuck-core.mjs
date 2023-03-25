@@ -1,47 +1,3 @@
-
-let prog = `
-//shove: push value to stack
-//harder: duplicate the number of depth specified at the top of the stack
-//stuck?: if deep value is greater than the shallow value return true
-//pump: increment the value at stack head
-//moan: output the top of the stack
-//yell: reserved
-//stroke: while loop. stack: inst1 inst2. after inst1, if head is truthy exec inst2. else continue
-
-shove 10 shove 0 
-        ((shove stuck?) shove 1 chain)
-        ((shove moan) (shove pump) shove 2 chain) stroke
-shove "mhm count my ass" moan
-`;
-
-let prog2 = `
-shove "Fibonacci my ass" moan expel
-shove 0 shove 1 shove 100 shove 0
-    ((shove stuck?) shove 1 chain)
-    (
-        (shove shove 4) (shove reverse)
-        (shove nudge) (shove booba) (shove moan)
-        (shove shove 4) (shove reverse)
-        (shove pump) // increment the counter
-        shove 8 chain
-    )stroke
-`;
-
-
-// experimental feature: scoping
-// not used
-let prog3 = `
-shove "Fibonacci my ass" moan expel
-shove 0 shove 1 shove 10 shove 0
-    {stuck?}
-    {
-        shove 4 reverse
-        nudge booba moan
-        shove 4 reverse
-        pump // increment the counter
-    }stroke
-`;
-
 const tokenize = (function(){
     const consumeSpaces = function(str,i){
         while(i < str.length){
@@ -295,7 +251,7 @@ const execAss = function(cmds,stack,ctx){
 };
 
 
-const exec = function(str){
+export const exec = function(str){
     const tokens = tokenize(str);
     console.log("assembled program:");
     console.log(tokens.map(a=>a.value).join(" "));
@@ -328,7 +284,5 @@ const exec = function(str){
     const stack = [];
     const ctx = {str};
     execAss(cmds,stack,ctx);
-}
+};
 
-exec(prog2);
-//console.log(tokenize(prog));
