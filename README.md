@@ -27,7 +27,7 @@ During the execution, a programmer gets a single stack to work on, and basically
 * squirt: 
 * stroke: while loop. stack: inst1 inst2. After executing inst1, if head value is truthy then exec inst2. else continue
 * yell: reserved
-* suck: reserved
+* suck: read one byte from the stdin
 
 ## Comments and spaces
 * `//` initiates one line comment
