@@ -7,6 +7,6 @@ if(!fname){
     process.exit(1);
 }
 
-exec(""+await fs.readFile(fname));
+await exec(""+await fs.readFile(fname));
 
 

@@ -1,3 +1,27 @@
+import {FifoQueue} from "./queue.mjs";
+
+const getByte = (()=>{
+    let bytes = new FifoQueue;
+    let resolvers = new FifoQueue;
+    process.stdin.on("data", data=>{
+        for(let byte of data){
+            bytes.push(byte);
+        }
+        while(resolvers.size !== 0 && bytes.size !== 0){
+            resolvers.pop()()
+        }
+    });
+    return async function(){
+        if(bytes.size === 0){
+            await new Promise(res=>{
+                resolvers.push(res);
+            });
+        }
+        let res = bytes.pop();
+        return res;
+    };
+})();
+
 const tokenize = (function(){
     const consumeSpaces = function(str,i){
         while(i < str.length){
@@ -230,10 +254,18 @@ const funcs = {
             execAss(inst,stack,ctx);
             execAss(cond,stack,ctx);
         }
+    },
+    // sucks a byte from stdin
+    "suck":async function(stack){
+        stack.push({
+            type:"val",
+            value:await getByte(),
+            i:-1
+        });
     }
 };
 
-const execAss = function(cmds,stack,ctx){
+const execAss = async function(cmds,stack,ctx){
     const str = ctx.str;
     for(let i = 0; i < cmds.length; i++){
         let cmd = cmds[i];
@@ -243,7 +275,8 @@ const execAss = function(cmds,stack,ctx){
         }else if(cmd.type === "id"){
             if(!(cmd.value in funcs))
                 throwError(`function ${cmd.value} not found at ${getAtString(str,cmd)}`);
-            funcs[cmd.value](stack,ctx);
+            const res = funcs[cmd.value](stack,ctx);
+            if(res instanceof Promise)await res;
         }else{
             throwError(`Error: Unexpected token at ${getAtString(str,cmd)}`);
         }
@@ -251,7 +284,7 @@ const execAss = function(cmds,stack,ctx){
 };
 
 
-export const exec = function(str){
+export const exec = async function(str){
     const tokens = tokenize(str);
     console.log("assembled program:");
     console.log(tokens.map(a=>a.value).join(" "));
@@ -283,6 +316,6 @@ export const exec = function(str){
     //console.log(cmds);
     const stack = [];
     const ctx = {str};
-    execAss(cmds,stack,ctx);
+    await execAss(cmds,stack,ctx);
 };
 
